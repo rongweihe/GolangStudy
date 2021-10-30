@@ -94,3 +94,64 @@ func main() {
 
 
 ```
+
+
+
+## 2.优雅的实现继承编程思想
+
+Golang 里面没有 C++、Java 那种继承的实现方式，但是，我们可以通过 Golang 的匿名组合来实现继承，这里需要注意
+，这个是实际编程中经常用到的一种姿势。
+
+具体实现就是一个 struct 里面包含一个匿名的 struct 也就是通过匿名组合 这最基础的基类就是一个 struct 结构
+
+然后定义相关成员变量，然后在定义一个子类，也是一个 struct 里面包含了前面的 struct 即可实现继承。
+
+实例代码如下
+```go
+
+package main
+
+import "fmt"
+
+//定义一个基类 struct 的 MsgBase 里面包含一个成员变量 msgID
+
+type MsgBase struct {
+	msgId   int
+	msgType int
+}
+
+//MsgBase 的一个成员方法  用来设置 msgID
+func (msg *MsgBase) SetId(msgId_ int) {
+	msg.msgId = msgId_
+}
+
+func (msg *MsgBase) SetType(msgType_ int) {
+	msg.msgType = msgType_
+}
+
+//子类 再定义一个 struct msgSub 包含了 MsgBase 但是并没有给定 MsgBase 任何名字 因此是匿名组合
+type MsgSub struct {
+	MsgBase
+
+	//如果子类也包含了一个基类的一样的成员变量，那么通过子类设置和获取得到的变量都是基类的成员
+	msgId int
+}
+
+func (msb *MsgSub) GetId() int {
+	return msb.msgId
+}
+
+func main() {
+	msb := &MsgSub{}
+
+	msb.SetId(123)
+	msb.SetType(1)
+
+	fmt.Println("msb.msgID =", msb.msgId, "\t msb.MsgBase.msgId=", msb.MsgBase.msgId)
+	fmt.Println("msb.msgType =", msb.msgType, "\t msb.MsgBase.msgType=", msb.MsgBase.msgType)
+
+	//输出
+	//msb.msgID = 0    msb.MsgBase.msgId= 123
+	//msb.msgType = 1          msb.MsgBase.msgType= 1
+}
+```
