@@ -18,7 +18,7 @@ import (
 	"golang.org/x/net/context"
 )
 
-type Cluster struct {
+type ClusterNew struct {
 	opts options
 }
 type options struct {
@@ -59,16 +59,16 @@ func ReadTimeout(d time.Duration) Option {
 
 //构造函数具体实现 传入相关 Options new 一个对象赋值
 //如果参数很多 也不需要传入很多参数 只需要传入 opts...Option 即可
-func NewCluster(opts ...Option) *Cluster {
+func NewCluster(opts ...Option) *ClusterNew {
 	clusterOpts := options{}
 	for _, opt := range opts {
 		//函数指针的赋值调用
 		opt(&clusterOpts)
 	}
 
-	cluster := new(Cluster)
-	cluster.opts = clusterOpts
-	return cluster
+	cluster_obj := new(ClusterNew)
+	cluster_obj.opts = clusterOpts
+	return cluster_obj
 }
 func main() {
 
@@ -81,11 +81,11 @@ func main() {
 	}
 
 	//终极操作 构造函数
-	cluster := NewCluster(commonsOpts...)
+	cluster_obj := NewCluster(commonsOpts...)
 
 	//测试验证
-	fmt.Println(cluster.opts.connectionTimeout)
-	fmt.Println(cluster.opts.writeTimeout)
+	fmt.Println(cluster_obj.opts.connectionTimeout)
+	fmt.Println(cluster_obj.opts.writeTimeout)
 
 	//输出
 	//1s
